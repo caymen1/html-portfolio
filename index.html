@@ -14,6 +14,8 @@
       <h1>Home Viewing Tracker</h1>
       <div class="header-actions">
         <input id="searchInput" type="search" placeholder="Search address, type, or notes" aria-label="Search properties" />
+        <button id="exportJsonBtn" class="btn" title="Export as JSON">Export JSON</button>
+        <button id="exportCsvBtn" class="btn" title="Export as CSV">Export CSV</button>
         <button id="clearAllBtn" class="btn btn-ghost" title="Remove all saved properties">Clear All</button>
       </div>
     </div>
@@ -80,6 +82,17 @@
               <input id="gardenSize" type="text" placeholder="e.g., Small, 20x30 ft, 150 m²" />
             </label>
 
+            <label class="form-field">
+              <span>Images</span>
+              <input id="imagesInput" type="file" accept="image/*" multiple />
+              <small class="hint">Up to 10 images. Images are compressed to save space.</small>
+            </label>
+
+            <div class="form-field form-notes">
+              <span>Selected Images</span>
+              <div id="imagePreview" class="images-grid" aria-live="polite"></div>
+            </div>
+
             <label class="form-field form-notes">
               <span>Notes</span>
               <textarea id="notes" rows="4" placeholder="Initial notes about the property..."></textarea>
@@ -99,6 +112,47 @@
       <div class="section-header">
         <h2>Saved Properties</h2>
         <div id="resultCount" class="muted"></div>
+      </div>
+      <div class="filters-bar" id="filtersBar">
+        <label class="inline-field">
+          <span>Type</span>
+          <select id="filterType">
+            <option value="All">All</option>
+            <option value="House">House</option>
+            <option value="Apartment">Apartment</option>
+            <option value="Townhouse">Townhouse</option>
+            <option value="Bungalow">Bungalow</option>
+            <option value="Cottage">Cottage</option>
+            <option value="Duplex">Duplex</option>
+            <option value="Other">Other</option>
+          </select>
+        </label>
+        <label class="inline-field">
+          <span>Garage</span>
+          <select id="filterGarage">
+            <option value="All">All</option>
+            <option value="None">None</option>
+            <option value="Street">Street</option>
+            <option value="Parking Space">Parking Space</option>
+            <option value="Single">Single</option>
+            <option value="Double">Double</option>
+          </select>
+        </label>
+        <label class="inline-field">
+          <span>Min Price</span>
+          <input id="filterMinPrice" type="number" min="0" placeholder="0" />
+        </label>
+        <label class="inline-field">
+          <span>Max Price</span>
+          <input id="filterMaxPrice" type="number" min="0" placeholder="Any" />
+        </label>
+        <label class="inline-field">
+          <span>Min Rooms</span>
+          <input id="filterMinRooms" type="number" min="0" placeholder="0" />
+        </label>
+        <div class="filters-actions">
+          <button id="resetFiltersBtn" type="button" class="btn btn-ghost">Reset Filters</button>
+        </div>
       </div>
       <div id="propertyList" class="cards-grid" aria-live="polite"></div>
     </section>
