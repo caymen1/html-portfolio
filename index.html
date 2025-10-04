@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Home Viewing Tracker</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="data:," />
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-inner">
+      <h1>Home Viewing Tracker</h1>
+      <div class="header-actions">
+        <input id="searchInput" type="search" placeholder="Search address, type, or notes" aria-label="Search properties" />
+        <button id="exportJsonBtn" class="btn" title="Export as JSON">Export JSON</button>
+        <button id="exportCsvBtn" class="btn" title="Export as CSV">Export CSV</button>
+        <button id="clearAllBtn" class="btn btn-ghost" title="Remove all saved properties">Clear All</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="card" id="form-section">
+      <div class="card-header">
+        <h2 id="formTitle">Add Property</h2>
+      </div>
+      <div class="card-body">
+        <form id="propertyForm" novalidate>
+          <input type="hidden" id="propertyId" />
+
+          <div class="form-grid">
+            <label class="form-field">
+              <span>Address<span class="req">*</span></span>
+              <input id="address" type="text" required placeholder="123 Main St, City" />
+              <small class="hint">Full address including city</small>
+            </label>
+
+            <label class="form-field">
+              <span>Price<span class="req">*</span></span>
+              <input id="price" type="number" min="0" step="1" required placeholder="e.g., 350000" />
+              <small class="hint">Numbers only</small>
+            </label>
+
+            <label class="form-field">
+              <span>Property Type</span>
+              <select id="propertyType">
+                <option value="House">House</option>
+                <option value="Apartment">Apartment</option>
+                <option value="Townhouse">Townhouse</option>
+                <option value="Bungalow">Bungalow</option>
+                <option value="Cottage">Cottage</option>
+                <option value="Duplex">Duplex</option>
+                <option value="Other">Other</option>
+              </select>
+            </label>
+
+            <label class="form-field">
+              <span>Rooms Downstairs</span>
+              <input id="roomsDownstairs" type="number" min="0" step="1" value="0" />
+            </label>
+
+            <label class="form-field">
+              <span>Rooms Upstairs</span>
+              <input id="roomsUpstairs" type="number" min="0" step="1" value="0" />
+            </label>
+
+            <label class="form-field">
+              <span>Garage</span>
+              <select id="garage">
+                <option value="None">None</option>
+                <option value="Street">Street</option>
+                <option value="Parking Space">Parking Space</option>
+                <option value="Single">Single</option>
+                <option value="Double">Double</option>
+              </select>
+            </label>
+
+            <label class="form-field">
+              <span>Garden Size</span>
+              <input id="gardenSize" type="text" placeholder="e.g., Small, 20x30 ft, 150 m²" />
+            </label>
+
+            <label class="form-field">
+              <span>Images</span>
+              <input id="imagesInput" type="file" accept="image/*" multiple />
+              <small class="hint">Up to 10 images. Images are compressed to save space.</small>
+            </label>
+
+            <div class="form-field form-notes">
+              <span>Selected Images</span>
+              <div id="imagePreview" class="images-grid" aria-live="polite"></div>
+            </div>
+
+            <label class="form-field form-notes">
+              <span>Notes</span>
+              <textarea id="notes" rows="4" placeholder="Initial notes about the property..."></textarea>
+            </label>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" id="saveBtn" class="btn btn-primary">Save Property</button>
+            <button type="button" id="cancelEditBtn" class="btn btn-ghost" hidden>Cancel Edit</button>
+            <button type="reset" class="btn">Reset</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <section id="list-section">
+      <div class="section-header">
+        <h2>Saved Properties</h2>
+        <div id="resultCount" class="muted"></div>
+      </div>
+      <div class="filters-bar" id="filtersBar">
+        <label class="inline-field">
+          <span>Type</span>
+          <select id="filterType">
+            <option value="All">All</option>
+            <option value="House">House</option>
+            <option value="Apartment">Apartment</option>
+            <option value="Townhouse">Townhouse</option>
+            <option value="Bungalow">Bungalow</option>
+            <option value="Cottage">Cottage</option>
+            <option value="Duplex">Duplex</option>
+            <option value="Other">Other</option>
+          </select>
+        </label>
+        <label class="inline-field">
+          <span>Garage</span>
+          <select id="filterGarage">
+            <option value="All">All</option>
+            <option value="None">None</option>
+            <option value="Street">Street</option>
+            <option value="Parking Space">Parking Space</option>
+            <option value="Single">Single</option>
+            <option value="Double">Double</option>
+          </select>
+        </label>
+        <label class="inline-field">
+          <span>Min Price</span>
+          <input id="filterMinPrice" type="number" min="0" placeholder="0" />
+        </label>
+        <label class="inline-field">
+          <span>Max Price</span>
+          <input id="filterMaxPrice" type="number" min="0" placeholder="Any" />
+        </label>
+        <label class="inline-field">
+          <span>Min Rooms</span>
+          <input id="filterMinRooms" type="number" min="0" placeholder="0" />
+        </label>
+        <div class="filters-actions">
+          <button id="resetFiltersBtn" type="button" class="btn btn-ghost">Reset Filters</button>
+        </div>
+      </div>
+      <div id="propertyList" class="cards-grid" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <div class="footer-inner">
+      <span>Data is stored locally in your browser.</span>
+    </div>
+  </footer>
+</body>
+</html>
